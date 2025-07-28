@@ -1,0 +1,16 @@
+# Ignore environment variables
+.env
+
+# Ignore node_modules in both server and client
+server/node_modules/
+client/node_modules/
+
+# Optional: ignore build output (for React)
+client/build/
+
+# Logs
+*.log
+
+# System files (optional)
+.DS_Store
+Thumbs.db
