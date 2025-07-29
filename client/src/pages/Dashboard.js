@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+import axios from '../utils/axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -13,27 +13,25 @@ function Dashboard() {
 
 
 
-  const token = localStorage.getItem('token');
-
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/bank/me', {
-        headers: { 'x-auth-token': token },
-      })
+      .get('/api/bank/me')
       .then(res => {
         setBalance(res.data.balance);
         setTransactions(res.data.transactions.reverse());
       })
       .catch(() => navigate('/login'));
-  }, [navigate, token]);
+  }, [navigate]);
+
+
 
   const handleTransaction = async (type, extra = {}) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/bank/${type}`,
-        { amount: parseFloat(amount), ...extra },
-        { headers: { 'x-auth-token': token } }
+        `/api/bank/${type}`,
+        { amount: parseFloat(amount), ...extra }
       );
+
       setBalance(res.data.balance);
       setAmount('');
       setRecipientEmail('');
@@ -48,15 +46,14 @@ function Dashboard() {
   // Add this:
   const fetchUserData = useCallback(() => {
     axios
-      .get('http://localhost:5000/api/bank/me', {
-        headers: { 'x-auth-token': token },
-      })
+      .get('/api/bank/me')
       .then(res => {
         setBalance(res.data.balance);
         setTransactions(res.data.transactions.reverse());
       })
       .catch(() => navigate('/login'));
-  }, [navigate, token]);
+  }, [navigate]);
+
 
 
   // Call on load:
