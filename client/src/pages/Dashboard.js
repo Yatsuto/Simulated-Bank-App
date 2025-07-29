@@ -24,7 +24,7 @@ function Dashboard() {
         setTransactions(res.data.transactions.reverse());
       })
       .catch(() => navigate('/login'));
-  }, []);
+  }, [navigate, token]);
 
   const handleTransaction = async (type, extra = {}) => {
     try {
@@ -60,7 +60,7 @@ function Dashboard() {
   // Call on load:
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [fetchUserData]);
 
 
 
