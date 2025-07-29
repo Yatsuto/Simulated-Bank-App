@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import React, { useEffect, useState, useCallback } from 'react';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ function Dashboard() {
   };
 
   // Add this:
-  const fetchUserData = () => {
+  const fetchUserData = useCallback(() => {
     axios
       .get('http://localhost:5000/api/bank/me', {
         headers: { 'x-auth-token': token },
@@ -55,7 +56,8 @@ function Dashboard() {
         setTransactions(res.data.transactions.reverse());
       })
       .catch(() => navigate('/login'));
-  };
+  }, [navigate, token]);
+
 
   // Call on load:
   useEffect(() => {
