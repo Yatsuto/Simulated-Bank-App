@@ -4,4 +4,3 @@
 # Ignore all .env files and variants
 **/.env
 **/.env.*
-ignoreme.txt
