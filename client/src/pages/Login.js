@@ -65,13 +65,18 @@ function Login() {
           {showPassword ? 'Hide' : 'Show'}
         </button>
       </div>
+      
+      <p className="text-sm text-right">
+        <Link to="/forgot-password" className="text-blue-600 hover:underline">
+          Forgot Password?
+        </Link>
+      </p>
 
       <button
         type="submit"
         disabled={loading}
-        className={`w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition ${
-          loading ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
+        className={`w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition ${loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
       >
         {loading ? 'Logging in...' : 'Login'}
       </button>

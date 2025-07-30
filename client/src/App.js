@@ -8,6 +8,7 @@ import Deposit from './pages/Deposit';
 import Withdraw from './pages/Withdraw';
 import Transfer from './pages/Transfer';
 import Transactions from './pages/Transactions';
+import ForgotPassword from './pages/ForgotPassword';
 import PrivateRoute from './utils/PrivateRoute';
 import Profile from './pages/Profile';
 import { ToastContainer } from 'react-toastify';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/deposit" element={<PrivateRoute><Deposit /></PrivateRoute>} />
           <Route path="/withdraw" element={<PrivateRoute><Withdraw /></PrivateRoute>} />
