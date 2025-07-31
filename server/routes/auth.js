@@ -14,21 +14,13 @@ router.post('/register', async (req, res) => {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: 'User already exists' });
 
-    user = new User({
-      name,
-      email,
-      password,
-    });
-
+    user = new User({ name, email, password });
     await user.save();
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server error');
   }
 });
@@ -44,13 +36,10 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
-    console.error(err.message);
     res.status(500).send('Server error');
   }
 });
@@ -58,6 +47,7 @@ router.post('/login', async (req, res) => {
 // Forgot Password
 router.post('/forgot-password', async (req, res) => {
   const { email } = req.body;
+
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ msg: 'No account with that email.' });
@@ -82,16 +72,14 @@ router.post('/forgot-password', async (req, res) => {
       from: process.env.EMAIL_USERNAME,
       subject: 'Password Reset',
       html: `<p>You requested a password reset</p>
-             <p><a href="${resetUrl}">Click here to reset your password</a></p>`, // ✅ FIXED: was resetURL (typo)
+             <p><a href="${resetUrl}">Click here to reset your password</a></p>`,
     });
 
     res.json({ msg: 'Reset link sent to your email' });
   } catch (err) {
-    console.error('SENDMAIL ERROR:', err); // ✅ this will print the real error in the terminal
     res.status(500).json({ msg: 'Server error' });
   }
 });
-
 
 // Reset Password
 router.post('/reset-password/:token', async (req, res) => {
@@ -116,6 +104,5 @@ router.post('/reset-password/:token', async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
-
 
 module.exports = router;
