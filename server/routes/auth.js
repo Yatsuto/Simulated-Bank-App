@@ -67,7 +67,7 @@ router.post('/forgot-password', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const resetURL = `http://localhost:3000/reset-password/${token}`; // change for prod
+    const resetURL = `https://simulated-bank.netlify.app/reset-password/${token}`;
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
