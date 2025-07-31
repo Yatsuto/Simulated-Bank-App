@@ -82,14 +82,16 @@ router.post('/forgot-password', async (req, res) => {
       from: process.env.EMAIL_USERNAME,
       subject: 'Password Reset',
       html: `<p>You requested a password reset</p>
-             <p><a href="${resetURL}">Click here to reset your password</a></p>`,
+             <p><a href="${resetUrl}">Click here to reset your password</a></p>`, // ✅ FIXED: was resetURL (typo)
     });
 
     res.json({ msg: 'Reset link sent to your email' });
   } catch (err) {
+    console.error('SENDMAIL ERROR:', err); // ✅ this will print the real error in the terminal
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
 
 // Reset Password
 router.post('/reset-password/:token', async (req, res) => {
