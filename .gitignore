@@ -3,5 +3,6 @@ client/node_modules/
 server/node_modules/
 
 # Ignore .env files only in client and server
-client/src/.env
+client/.env
 server/.env
+.env
