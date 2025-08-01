@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from '../utils/axios';
 import { useNavigate, Link } from 'react-router-dom';
-import '../Dashboard.css'; // Create this CSS file or use inline styles
+import '../styles/Dashboard.css'; // Create this CSS file or use inline styles
 
 function Dashboard() {
   const navigate = useNavigate();
