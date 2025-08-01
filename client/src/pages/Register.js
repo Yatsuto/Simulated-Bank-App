@@ -2,15 +2,28 @@ import React, { useState } from 'react';
 import axios from '../utils/axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import zxcvbn from 'zxcvbn';
 
 function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [strengthScore, setStrengthScore] = useState(0);
+  const [strengthLabel, setStrengthLabel] = useState('Weak');
+
 
   const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+
+    if (name === 'password') {
+      const passwordStrength = zxcvbn(value);
+      const score = passwordStrength.score;
+      const label = ['Weak', 'Weak', 'Fair', 'Good', 'Strong'][score];
+      setStrengthScore(score);
+      setStrengthLabel(label);
+    }
   };
 
   const validatePassword = (password) => {
@@ -92,6 +105,25 @@ function Register() {
         </button>
       </div>
 
+      {/* ✅ Password Strength Meter */}
+      <div className="mt-2">
+        <progress
+          value={strengthScore}
+          max="4"
+          className="w-full"
+        ></progress>
+        <p
+          className={`text-sm mt-1 ${strengthScore < 2
+              ? 'text-red-500'
+              : strengthScore === 2
+                ? 'text-yellow-500'
+                : 'text-green-500'
+            }`}
+        >
+          Strength: {strengthLabel}
+        </p>
+      </div>
+
       <input
         name="confirmPassword"
         type="password"
@@ -105,9 +137,8 @@ function Register() {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition ${
-          loading ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
+        className={`w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition ${loading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
       >
         {loading ? 'Registering...' : 'Register'}
       </button>

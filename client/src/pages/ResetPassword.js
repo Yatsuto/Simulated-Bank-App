@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from '../utils/axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import zxcvbn from 'zxcvbn';
 
 function ResetPassword() {
   const { token } = useParams();
@@ -9,6 +10,9 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [strengthScore, setStrengthScore] = useState(0);
+  const [strengthLabel, setStrengthLabel] = useState('Weak');
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -41,10 +45,36 @@ function ResetPassword() {
         type="password"
         placeholder="New Password"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={e => {
+          const val = e.target.value;
+          setPassword(val);
+
+          const result = zxcvbn(val);
+          const score = result.score;
+          const label = ['Weak', 'Weak', 'Fair', 'Good', 'Strong'][score];
+          setStrengthScore(score);
+          setStrengthLabel(label);
+        }}
         required
         className="w-full border p-2 rounded-md"
       />
+
+      {/* 🔐 Password Strength Meter */}
+      <div className="mt-2">
+        <progress value={strengthScore} max="4" className="w-full"></progress>
+        <p
+          className={`text-sm mt-1 ${
+            strengthScore < 2
+              ? 'text-red-500'
+              : strengthScore === 2
+              ? 'text-yellow-500'
+              : 'text-green-500'
+          }`}
+        >
+          Strength: {strengthLabel}
+        </p>
+      </div>
+
       <input
         type="password"
         placeholder="Confirm New Password"
