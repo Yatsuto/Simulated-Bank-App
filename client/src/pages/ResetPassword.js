@@ -14,11 +14,22 @@ function ResetPassword() {
   const [strengthScore, setStrengthScore] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState('Weak');
 
+  // ✅ Password rule checker: 8+ chars, number, special char
+  const isValidPassword = password => {
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
+      return;
+    }
+
+    if (!isValidPassword(password)) {
+      toast.error('Password must be at least 8 characters and include a number and a symbol');
       return;
     }
 
