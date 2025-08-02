@@ -12,6 +12,14 @@ function Register() {
   const [strengthScore, setStrengthScore] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState('Weak');
 
+  const getPasswordRules = (password) => {
+    return {
+      length: password.length >= 8,
+      number: /\d/.test(password),
+      symbol: /[^A-Za-z0-9]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+    };
+  };
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -31,29 +39,37 @@ function Register() {
     return regex.test(password);
   };
 
+  const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    return regex.test(email);
+  };
+
   const handleSubmit = async e => {
     e.preventDefault();
 
-    // Confirm password check
     if (form.password !== form.confirmPassword) {
       toast.error('Passwords do not match');
       return;
     }
 
-    // Validate password strength
+    // Validate email format
+    if (!isValidEmail(form.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
     if (!validatePassword(form.password)) {
-      toast.error('Password must be at least 8 characters and include a number, an uppercase letter, and a symbol.');
+      toast.error('Password must be at least 8 characters long and include at least one number, one uppercase letter, and one special character.');
       return;
     }
 
     try {
       setLoading(true);
-      const { name, email, password } = form;
+      const { name, email, password } = form; // ✅ Fix here
       const res = await axios.post('/api/auth/register', { name, email, password });
-      localStorage.setItem('token', res.data.token);
-      toast.success('Registration successful!');
-      setForm({ name: '', email: '', password: '', confirmPassword: '' }); // Clear form
-      navigate('/dashboard');
+
+      toast.success(res.data.msg || 'Registered! Please check your email to verify your account.');
+      setForm({ name: '', email: '', password: '', confirmPassword: '' });
     } catch (err) {
       toast.error(err.response?.data?.msg || 'Registration failed');
     } finally {
@@ -105,24 +121,36 @@ function Register() {
         </button>
       </div>
 
-      {/* ✅ Password Strength Meter */}
-      <div className="mt-2">
-        <progress
-          value={strengthScore}
-          max="4"
-          className="w-full"
-        ></progress>
-        <p
-          className={`text-sm mt-1 ${strengthScore < 2
+      {/* ✅ Show strength only if password has been typed */}
+      {form.password && form.password.length > 0 && (
+        <div className="mt-2">
+          <progress value={strengthScore} max="4" className="w-full h-2"></progress>
+          <p
+            className={`text-sm mt-1 ${strengthScore < 2
               ? 'text-red-500'
               : strengthScore === 2
                 ? 'text-yellow-500'
                 : 'text-green-500'
-            }`}
-        >
-          Strength: {strengthLabel}
-        </p>
-      </div>
+              }`}
+          >
+            Strength: {strengthLabel}
+          </p>
+
+          <div className="text-sm space-y-1 mt-2">
+            {Object.entries(getPasswordRules(form.password)).map(([key, passed]) => (
+              <p key={key} className={passed ? 'text-green-600' : 'text-red-500'}>
+                {passed ? '✅' : '❌'}{' '}
+                {{
+                  length: 'At least 8 characters',
+                  number: 'Includes a number',
+                  symbol: 'Includes a symbol',
+                  uppercase: 'Includes an uppercase letter',
+                }[key]}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
 
       <input
         name="confirmPassword"
