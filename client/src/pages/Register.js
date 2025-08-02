@@ -8,7 +8,6 @@ function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [strengthScore, setStrengthScore] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState('Weak');
 
