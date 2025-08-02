@@ -6,7 +6,7 @@ require('dotenv').config();
 const app = express();
 
 const corsOptions = {
-  origin: '*', // allow all during dev; restrict this later in production
+  origin: ['http://localhost:3000', 'https://simulated-bank-app.netlify.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
