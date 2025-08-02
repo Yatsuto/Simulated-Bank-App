@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from '../utils/axios';
 import { toast } from 'react-toastify';
 import zxcvbn from 'zxcvbn';
+import { Link } from 'react-router-dom';
 
 function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
